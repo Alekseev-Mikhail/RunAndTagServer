@@ -1,4 +1,5 @@
 using LiteNetLib;
+using RunAndTagCore;
 using Server;
 
 namespace RunAndTagServer;
@@ -7,7 +8,6 @@ public class GameServer(Game game) : RemoteServer
 {
     protected override void OnTick()
     {
-        game.Test();
     }
 
     protected override void OnConnectionRequest(ConnectionRequest request)
@@ -16,13 +16,18 @@ public class GameServer(Game game) : RemoteServer
         else request.Reject();
     }
 
-    protected override void OnPeerConnected(NetPeer peer)
+    protected override void OnConnected(NetPeer client)
     {
-        Send(game.Join(peer.Id), peer);
+        var writer = NetworkSerializer.SerializeFullSnapshot(
+            game.Map,
+            game.Seeker,
+            game.Hider,
+            game.GetRole(Manager.ConnectedPeersCount)
+        );
+        client.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
-    protected override void OnPeerDisconnected(NetPeer peer, DisconnectInfo info)
+    protected override void OnDisconnected(NetPeer client, DisconnectInfo info)
     {
-        game.Leave(peer.Id);
     }
 }
