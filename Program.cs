@@ -39,6 +39,6 @@ var map = new GameMap(tileSet, mapWidth, '#', seeker, hider);
 var game = new Game(map);
 var server = new GameServer(game);
 
-server.Start(8080, 30);
+server.Start(8080, 10);
 
 Console.ReadKey();
