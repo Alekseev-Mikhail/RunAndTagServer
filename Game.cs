@@ -50,7 +50,7 @@ public class Game(GameMap map)
     {
         for (var i = 0; i < value; i++)
         {
-            _rayMath.Step(player, map, float.DegreesToRadians(angle), player.MovementVelocity);
+            _rayMath.Step(player, map, angle, player.MovementVelocity);
             
             if (_rayMath.ResultRay.IsWallExist) break;
             player.X = _rayMath.ResultRay.Target.X;
